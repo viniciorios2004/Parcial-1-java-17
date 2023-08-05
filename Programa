@@ -1,0 +1,58 @@
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+
+import java.time.LocalDate;
+
+public class TaskManagerApp extends Application {
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Task Manager");
+
+        // Crear componentes
+        Label titleLabel = new Label("Task Manager");
+        TextField taskDescriptionField = new TextField();
+        DatePicker dueDatePicker = new DatePicker();
+        Button addButton = new Button("Add Task");
+        ListView<String> taskListView = new ListView<>();
+
+        // Configurar eventos
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String taskDescription = taskDescriptionField.getText();
+                LocalDate dueDate = dueDatePicker.getValue();
+                if (taskDescription != null && dueDate != null) {
+                    String taskInfo = taskDescription + " (Due: " + dueDate.toString() + ")";
+                    taskListView.getItems().add(taskInfo);
+                    taskDescriptionField.clear();
+                    dueDatePicker.setValue(null);
+                }
+            }
+        });
+
+        // Crear contenedor
+        VBox root = new VBox(10);
+        root.getChildren().addAll(
+                titleLabel,
+                new Label("Task Description:"),
+                taskDescriptionField,
+                new Label("Due Date:"),
+                dueDatePicker,
+                addButton,
+                new Label("Task List:"),
+                taskListView
+        );
+        Scene scene = new Scene(root, 400, 400);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+}
